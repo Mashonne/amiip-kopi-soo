@@ -293,7 +293,6 @@
         records.forEach((record) => {
           const quizType = record.fields.Quiz.toLowerCase();
           const resultName = record.fields.Result_name;
-          const createdTime = new Date(record.createdTime);
     
           if (quizType && resultName) {
             if (resultName.includes("Amateur")) {
@@ -312,7 +311,7 @@
       // Create chart data
       function createChartData(results) {
         return {
-          labels: ["Amateur", "Rookie", "Pro"],
+          labels: ["Amateur", "Trainee", "Pro"],
           datasets: [
             {
               label: "Audio",
