@@ -1,439 +1,1003 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aggregate Results</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" /> -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto Mono:wght@400;700&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto Mono:wght@400;700&display=swap"
+    />
     <style>
-        body { background-color: black; color: white; font-family: 'Roboto Mono', monospace; min-height: 100vh }
-        .chart-container { width: 60%; height: 60vh; min-height: 350px; margin-left: 5%; display: flex; justify-content: left; font-size: 25px;}
-        canvas { font-size: 57px; }
-        .visualiser { margin-top: 20px; }
-        .title { width:40%; font-family: 'Roboto Mono'; text-align: left; margin-left: 5%; padding: 20px; line-height: 300%; font-weight: 20%;}
-        .key { display: flex; justify-content: flex-start; margin-top: 0px; text-align: left; margin-left: 5%; padding: 20px; }
-        .ellipse-parent { display: flex; align-items: center; margin: 0 10px; }
-        .frame-child, .frame-item, .frame-inner { width: 20px; height: 20px; border-radius: 50%; margin-right: 10px; }
-        .frame-child { background-color: #FFDC00; } /*audio */
-         .frame-item { background-color: #FF8200; } /*video */
-        .frame-inner { background-color: #8A68C8; } /*orange */
-        b { font-size: 18px; }
-        .recent-counts { 
-            display: flex;
-             flex-direction: column; 
-             justify-content: center; 
-             align-items: center;
-              margin-left: 20px;
-               margin-bottom: 50px;
-             }
-        .count-box { 
-            background-color: black; 
-             border: 2.2px solid #b3b3b3;
-              border-radius: 22px;
-               padding: 10px;
-                margin-bottom: 10px;
-                 text-align: center;
-                  width: 150px;
-                   height: 170px
-                }
+      body {
+        background-color: black;
+        color: white;
+        font-family: "Roboto Mono", monospace;
+        min-height: 100vh;
+      }
+      .chart-container {
+        width: 60%;
+        height: 60vh;
+        min-height: 350px;
+        margin-left: 5%;
+        display: flex;
+        justify-content: left;
+        font-size: 25px;
+      }
+      canvas {
+        font-size: 57px;
+      }
+      .visualiser {
+        margin-top: 20px;
+      }
+      .title {
+        font-family: "Roboto Mono";
+      }
+      .key {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 0px;
+        text-align: left;
+        margin-left: 5%;
+      }
+      .ellipse-parent {
+        display: flex;
+        align-items: center;
+        margin: 0 10px;
+      }
+      .frame-child,
+      .frame-item,
+      .frame-inner {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .frame-child {
+        background-color: #ffdc00;
+      } /*audio */
+      .frame-item {
+        background-color: #ff8200;
+      } /*video */
+      .frame-inner {
+        background-color: #8a68c8;
+      } /*orange */
+      b {
+        font-size: 18px;
+      }
+      .recent-counts {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 20px;
+        margin-bottom: 50px;
+      }
+      .count-box {
+        background-color: black;
+        border: 2.2px solid #b3b3b3;
+        border-radius: 22px;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+        width: 150px;
+        height: 170px;
+      }
 
-        .right-image { margin: 20px; position: fixed; right: 10%; }
-        .right-image img { width: 350px; height: auto; }
-        .group-child, .group-item, .group-inner, .line-div, .group-child1, .group-child2 {
-            position: absolute;
-            left: -1px;
-            border-top: 2px dashed #b3b3b3;
-            box-sizing: border-box;
-            width: 100vw;
-            height: 2px;
-        }
-        .group-child { top: calc(25vh + 150px); border-top: 2px solid #b3b3b3; }
-        .group-child2 { top: calc(25vh + 90px); }
-        .group-item { top: calc(25vh + 30px); }
-        .group-inner { top: calc(25vh - 30px); }
-        .line-div { top: calc(25vh - 90px); }
-        .group-child1 { top: calc(25vh - 150px); }
-        
-        .line-parent { width: 100%; position: absolute; height: 80vh; z-index: -1; }
-        .line-parent2 { 
-            width: 100%; 
-            position: absolute; 
-            top: calc(25vh + 45px);
-             height: calc(25vh + 450px); 
-             z-index: 1; 
-             display: flex;
-              flex-direction: column; 
-              justify-content: left; 
-              align-items: left;}
- 
-        .plus-sign::before { content: "+"; }
-        .header-div{
-            margin-left: 10%; 
-            width:110px;
-        }
-        .text-header { 
-            font-size: 22px;
-             font-weight: 700;
-              text-align: center;
-               color: black;
-                background-color: white; 
-                margin: 0;
-                 border: none; 
-                 position: absolute; 
-                }
-        .right {left: calc(5% + 18px); top: calc(25vh - 240px);}
-        .top {top: calc(25vh - 280px); position: relative;}
+      .right-image {
+        margin: 20px;
+        position: fixed;
+        right: 10%;
+      }
+      .right-image img {
+        width: 350px;
+        height: auto;
+      }
+      .group-child,
+      .group-item,
+      .group-inner,
+      .line-div,
+      .group-child1,
+      .group-child2 {
+        position: absolute;
+        left: -1px;
+        border-top: 2px dashed #b3b3b3;
+        box-sizing: border-box;
+        width: 100vw;
+        height: 2px;
+      }
+      .group-child {
+        top: calc(25vh + 150px);
+        border-top: 2px solid #b3b3b3;
+      }
+      .group-child2 {
+        top: calc(25vh + 90px);
+      }
+      .group-item {
+        top: calc(25vh + 30px);
+      }
+      .group-inner {
+        top: calc(25vh - 30px);
+      }
+      .line-div {
+        top: calc(25vh - 90px);
+      }
+      .group-child1 {
+        top: calc(25vh - 150px);
+      }
 
-        /* Mobile Devices (max-width: 767px) */
-@media only screen and (max-width: 767px) {
-    b { font-size: 18px; }
-        .recent-counts { display: flex; flex-direction: column; justify-content: center; align-items: center; margin-left: 20px; }
-        .group-child, .group-item, .group-inner, .line-div, .group-child1, .group-child2 {
-            position: absolute;
-            left: -1px;
-            border-top: 2px dashed #b3b3b3;
-            box-sizing: border-box;
-            width: 80vw;
-            height: 2px;
-        }
-        .group-child { top: calc(25vh + 165px); border-top: 2px solid #b3b3b3; }
-        .group-child2 { top: calc(25vh + 90px); }
-        .group-item { top: calc(25vh + 30px); }
-        .group-inner { top: calc(25vh - 30px); }
-        .line-div { top: calc(25vh - 90px); }
-        .group-child1 { top: calc(25vh - 150px); }
-        
-        .line-parent { width: 100%; position: absolute; height: 80vh; z-index: -1; }
-        .line-parent2 { width: 100%; position: absolute; top: calc(25vh + 105px); height: calc(25vh + 450px); z-index: 1; display: flex; flex-direction: column; justify-content: left; align-items: left;}
- 
-    .chart-container {
-        width: 50%; /* Full-width on mobile */
-        height: 400px; /* Adjusted height for smaller screens */
-    }
-    .title {
-        width: 30%; /* More space for the title on smaller screens */
-        font-size: 10px; /* Smaller font size for mobile */
+      .line-parent {
+        width: 100%;
+        position: absolute;
+        height: 80vh;
+        z-index: -1;
+      }
+      .line-parent2 {
+        width: 100%;
+        position: absolute;
+        top: calc(25vh + 45px);
+        height: calc(25vh + 450px);
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+      }
+
+      .plus-sign::before {
+        content: "+";
+      }
+      .header-div {
         margin-left: 10%;
-        margin-top:10%;
-    }
-    .count-box {
-        width: 100px; /* Smaller boxes for counts */
-        height: 140px; /* Adjust height */
-    }
-    .right-image img {
-        margin-bottom: 50%;
-        margin-right:15%;
-        width: 150px; /* Smaller logo for better fit on mobile */
-    }
-    .key {
-        font-size: 14px; /* Smaller font size for key legends */
-    }
+        width: 110px;
+      }
+      .text-header {
+        font-size: 22px;
+        font-weight: 700;
+        text-align: center;
+        color: black;
+        background-color: white;
+        margin: 0;
+        border: none;
+        position: absolute;
+      }
+      .right {
+        left: calc(5% + 18px);
+        top: calc(25vh - 240px);
+      }
+      .top {
+        top: calc(25vh - 280px);
+        position: relative;
+      }
 
-    .text-header { font-size: 22px; font-weight: 700; text-align: center; color: black; background-color: white; margin: 0; margin-bottom: 30px; border: none; position: absolute; }
-        .right {left: calc(5% + 18px); top: calc(25vh - 300px);}
-        .top {top: calc(25vh - 300px); position: relative;}
-}
-/* Large TV Screens (min-width: 1920px) */
-@media only screen and (min-width: 1920px) {
-            .chart-container {
-                width: 70%; /* Suitable width for large screens */
-                height: 70vh; /* Adjusted height for larger view */
-            }
-            .title {
-                width: 50%; /* Increase width for larger screens */
-                font-size: 36px; /* Larger font size for better readability */
-                margin-left: 5%;
-            }
-            .key {
-                font-size: 24px; /* Adjust key legend font size for larger screens */
-                margin-left: 5%;
-            }
-            .right-image img {
-                width: 500px; /* Larger logo for better visibility on large screens */
-            }
-            
-            .text-header { font-size: 22px; font-weight: 700; text-align: center; color: black; background-color: white; margin: 0; margin-bottom: 30px; border: none; position: absolute; }
-            .right {left: calc(5% + 18px); top: calc(25vh - 280px);}
-            .top {top: calc(25vh - 320px); position: relative;}
-
+      /* Mobile Devices (max-width: 767px) */
+      @media only screen and (max-width: 767px) {
+        b {
+          font-size: 18px;
+        }
+        .recent-counts {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-left: 20px;
+        }
+        .group-child,
+        .group-item,
+        .group-inner,
+        .line-div,
+        .group-child1,
+        .group-child2 {
+          position: absolute;
+          left: -1px;
+          border-top: 2px dashed #b3b3b3;
+          box-sizing: border-box;
+          width: 80vw;
+          height: 2px;
+        }
+        .group-child {
+          top: calc(25vh + 165px);
+          border-top: 2px solid #b3b3b3;
+        }
+        .group-child2 {
+          top: calc(25vh + 90px);
+        }
+        .group-item {
+          top: calc(25vh + 30px);
+        }
+        .group-inner {
+          top: calc(25vh - 30px);
+        }
+        .line-div {
+          top: calc(25vh - 90px);
+        }
+        .group-child1 {
+          top: calc(25vh - 150px);
         }
 
-/* Tablets (between 768px and 1024px - typically iPads) */
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-
-    b { font-size: 18px; }
-        .recent-counts { display: flex; flex-direction: column; justify-content: center; align-items: center; margin-left: 20px; }
-        .group-child, .group-item, .group-inner, .line-div, .group-child1, .group-child2 {
-            position: absolute;
-            left: -1px;
-            border-top: 2px dashed #b3b3b3;
-            box-sizing: border-box;
-            width: 80vw;
-            height: 2px;
+        .line-parent {
+          width: 100%;
+          position: absolute;
+          height: 80vh;
+          z-index: -1;
         }
-        .group-child { top: calc(25vh + 165px); border-top: 2px solid #b3b3b3; }
-        .group-child2 { top: calc(25vh + 90px); }
-        .group-item { top: calc(25vh + 30px); }
-        .group-inner { top: calc(25vh - 30px); }
-        .line-div { top: calc(25vh - 90px); }
-        .group-child1 { top: calc(25vh - 165px); }
-        
-        .line-parent { width: 100%; position: absolute; height: 80vh; z-index: -1; }
-        .line-parent2 { width: 100%; position: absolute; top: calc(25vh + 140px); height: calc(25vh + 450px); z-index: 1; display: flex; flex-direction: column; justify-content: left; align-items: left;}
- 
+        .line-parent2 {
+          width: 100%;
+          position: absolute;
+          top: calc(25vh + 105px);
+          height: calc(25vh + 450px);
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: left;
+          align-items: left;
+        }
 
-    .chart-container {
-        width: 70%; /* Optimal width for tablets */
-        height: 300px; /* Larger than mobile for better visibility */
-        margin-left: 10%;
-    }
-    .title {
-        width: 40%; /* Increase width for tablets */
-        font-size: 20px; /* Larger font size for better readability */
-        margin-left: 10%;
-    }
-    .count-box {
-        width: 120px; /* Adjust box width for tablets */
-        height: 150px; /* Adjust box height for tablets */
-    }
-    .right-image img {
-        width: 250px; /* Adjust logo size for tablets */
-    }
-    .key {
-        font-size: 32px; /* Adjust key legend font size for tablets */
-    }
-}
+        .chart-container {
+          width: 50%; /* Full-width on mobile */
+          height: 400px; /* Adjusted height for smaller screens */
+        }
+        .title {
+          width: 30%; /* More space for the title on smaller screens */
+          font-size: 10px; /* Smaller font size for mobile */
+          margin-left: 10%;
+          margin-top: 10%;
+        }
+        .count-box {
+          width: 100px; /* Smaller boxes for counts */
+          height: 140px; /* Adjust height */
+        }
+        .right-image img {
+          margin-bottom: 50%;
+          margin-right: 15%;
+          width: 150px; /* Smaller logo for better fit on mobile */
+        }
+        .key {
+          font-size: 14px; /* Smaller font size for key legends */
+        }
+
+        .text-header {
+          font-size: 22px;
+          font-weight: 700;
+          text-align: center;
+          color: black;
+          background-color: white;
+          margin: 0;
+          margin-bottom: 30px;
+          border: none;
+          position: absolute;
+        }
+        .right {
+          left: calc(5% + 18px);
+          top: calc(25vh - 300px);
+        }
+        .top {
+          top: calc(25vh - 300px);
+          position: relative;
+        }
+      }
+      /* Large TV Screens (min-width: 1920px) */
+      @media only screen and (min-width: 1920px) {
+        .chart-container {
+          width: 70%; /* Suitable width for large screens */
+          height: 70vh; /* Adjusted height for larger view */
+        }
+        .title {
+          width: 50%; /* Increase width for larger screens */
+          font-size: 36px; /* Larger font size for better readability */
+          margin-left: 5%;
+        }
+        .key {
+          font-size: 24px; /* Adjust key legend font size for larger screens */
+          margin-left: 5%;
+        }
+        .right-image img {
+          width: 500px; /* Larger logo for better visibility on large screens */
+        }
+
+        .text-header {
+          font-size: 22px;
+          font-weight: 700;
+          text-align: center;
+          color: black;
+          background-color: white;
+          margin: 0;
+          margin-bottom: 30px;
+          border: none;
+          position: absolute;
+        }
+        .right {
+          left: calc(5% + 18px);
+          top: calc(25vh - 280px);
+        }
+        .top {
+          top: calc(25vh - 320px);
+          position: relative;
+        }
+      }
+
+      /* Tablets (between 768px and 1024px - typically iPads) */
+      @media only screen and (min-width: 768px) and (max-width: 1024px) {
+        b {
+          font-size: 18px;
+        }
+        .recent-counts {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin-left: 20px;
+        }
+        .group-child,
+        .group-item,
+        .group-inner,
+        .line-div,
+        .group-child1,
+        .group-child2 {
+          position: absolute;
+          left: -1px;
+          border-top: 2px dashed #b3b3b3;
+          box-sizing: border-box;
+          width: 80vw;
+          height: 2px;
+        }
+        .group-child {
+          top: calc(25vh + 165px);
+          border-top: 2px solid #b3b3b3;
+        }
+        .group-child2 {
+          top: calc(25vh + 90px);
+        }
+        .group-item {
+          top: calc(25vh + 30px);
+        }
+        .group-inner {
+          top: calc(25vh - 30px);
+        }
+        .line-div {
+          top: calc(25vh - 90px);
+        }
+        .group-child1 {
+          top: calc(25vh - 165px);
+        }
+
+        .line-parent {
+          width: 100%;
+          position: absolute;
+          height: 80vh;
+          z-index: -1;
+        }
+        .line-parent2 {
+          width: 100%;
+          position: absolute;
+          top: calc(25vh + 140px);
+          height: calc(25vh + 450px);
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: left;
+          align-items: left;
+        }
+
+        .chart-container {
+          width: 70%; /* Optimal width for tablets */
+          height: 300px; /* Larger than mobile for better visibility */
+          margin-left: 10%;
+        }
+        .title {
+          width: 40%; /* Increase width for tablets */
+          font-size: 20px; /* Larger font size for better readability */
+          margin-left: 10%;
+        }
+        .count-box {
+          width: 120px; /* Adjust box width for tablets */
+          height: 150px; /* Adjust box height for tablets */
+        }
+        .right-image img {
+          width: 250px; /* Adjust logo size for tablets */
+        }
+        .key {
+          font-size: 32px; /* Adjust key legend font size for tablets */
+        }
+      }
     </style>
-</head>
-<body>
-    <div class="right-image">
-        <img src="./logo.svg" alt="Image">
-    </div>
-    <div class="visualiser">
-        
-        <div class="title">
-            <h1>Can you identify the AI imposter?</h1>
+  </head>
+  <body>
+    <div
+      class="flex flex-col sm:h-screen justify-between gap-[30px] sm:py-[50px] xl:py-[70px] py-[30px] px-[30px] sm:px-[60px] xl:px-[70px]"
+    >
+      <div
+        class="flex justify-start gap-[20px] xl:justify-between flex-col xl:flex-row"
+      >
+        <span
+          class="w-full text-[24px] sm:text-[30px] xl:text-[50px] flex-1 order-2 xl:order-1 xl:item-center"
+        >
+          Can you identify <br />
+          the AI imposter?
+        </span>
+        <div
+          class="text-[20px] sm:text-[30px] order-1 xl:order-2 flex xl:justify-end"
+        >
+          <div class="w-1/2 sm:w-[300px] xl:w-[500px]">
+            <img src="./logo.svg" alt="Image" />
+          </div>
         </div>
-        
-        <div class="line-parent">
-            <div class="group-child"></div>
-            <div class="group-item"></div>
-            <div class="group-inner"></div>
-            <div class="line-div"></div>
-            <div class="group-child1"></div>
-            <div class="group-child2"></div>
-        </div>
-        <div class="line-parent2">
-            
-            <div class="chart-container">
-                
-                <canvas id="resultsChart"></canvas>
-                
-                <div class="recent-counts">
-                    <div>
-                        <span class="text-header right">
-                            TOTAL OUTCOMES
-                        </span>
-                       
-                    <span class="text-header top">
+      </div>
+      <div class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-end">
+
+          <div class="flex flex-col w-full gap-[20px]"> 
+            <div>
+                <span class="text-[10px] sm:text-[16px] px-[7px] text-black bg-white">
+                    TOTAL OUTCOMES
+                </span>
+            </div>         
+             <div class="flex flex-col xl:flex-row justify-between">
+                <div class="w-full xl:w-2/3">
+                    <canvas id="myChart" height=110"></canvas>
+                </div>
+             </div>
+            <div class="flex justify-between uppercase sm:justify-start sm:gap-[30px]">
+              <div class="flex gap-[6px] items-center">
+                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#ff8200]"></div>
+                <span class="text-[10px] sm:text-[16px]">Video Results</span>
+              </div>
+              <div class="flex gap-[6px] items-center">
+                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#ffdc00]"></div>
+                <span class="text-[10px] sm:text-[16px]">Audio Results</span>
+              </div>
+              <div class="flex gap-[6px] items-center">
+                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#8a68c8]"></div>
+                <span class="text-[10px] sm:text-[16px]">Photo Results</span>
+              </div>
+            </div>
+          </div>
+            <div class="flex flex-col gap-[10px]">
+                <div>
+                    <span class="text-[10px] sm:text-[16px] px-[7px] text-black bg-white">
                         LAST 20 MINUTES
                     </span>
+                </div>
+                <div class="flex flex-row xl:flex-col gap-[10px]">
+                    <div class="flex px-[20px] py-[10px] flex-col w-full xl:w-[200px] border-white border-[2px] rounded-[10px]">
+                        <span class="text-[10px] sm:text-[16px]">AMATEUR</span>
+                        <span class="text-[25px] sm:text-[40px] xl:text-[50px] font-medium text-center">
+                            +1
+                        </span>
                     </div>
-                    <div class="count-box">
-                        <b>Amateur</b>
-                        <div id="amateur-count" class="plus-sign">0</div>
+                    <div class="flex px-[20px] py-[10px] flex-col w-full xl:w-[200px] border-white border-[2px] rounded-[10px]">
+                        <span class="text-[10px] sm:text-[16px]">AMATEUR</span>
+                        <span class="text-[25px] sm:text-[40px] xl:text-[50px] font-medium text-center">
+                            +2
+                        </span>
                     </div>
-                    <div class="count-box">
-                        <b>Trainee</b>
-                        <div id="rookie-count" class="plus-sign">0</div>
-                    </div>
-                    <div class="count-box">
-                        <b>Pro</b>
-                        <div id="pro-count" class="plus-sign">0</div>
+                    <div class="flex px-[20px] py-[10px] flex-col w-full xl:w-[200px] border-white border-[2px] rounded-[10px]">
+                        <span class="text-[10px] sm:text-[16px]">AMATEUR</span>
+                        <span class="text-[25px] sm:text-[40px] xl:text-[50px] font-medium text-center">
+                            +0
+                        </span>
                     </div>
                 </div>
             </div>
-
-            <div class="key">
-                <div class="ellipse-parent">
-                    <div class="frame-child"></div>
-                    <b>Video Results</b>
-                </div>
-                <div class="ellipse-parent">
-                    <div class="frame-item"></div>
-                    <b>Audio Results</b>
-                </div>
-                <div class="ellipse-parent">
-                    <div class="frame-inner"></div>
-                    <b>Photo Results</b>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <!-- <div class="visualiser">
+            <div class="right-image-test">
+      <img src="./logo.svg" alt="Image" />
+    </div>
+      <div class="title">
+        <h1>Can you identify the AI imposter?</h1>
+      </div>
 
-    <script>
-        let chart;
+      <div class="line-parent">
+        <div class="group-child"></div>
+        <div class="group-item"></div>
+        <div class="group-inner"></div>
+        <div class="line-div"></div>
+        <div class="group-child1"></div>
+        <div class="group-child2"></div>
+      </div>
+      <div class="line-parent2">
+        <div class="chart-container">
+          <canvas id="resultsChart"></canvas>
 
-        // Function to fetch data from Airtable
-        async function fetchData() {
-            const response = await fetch('https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201', {
-                headers: {
-                    'Authorization': 'Bearer patFK6oNVppWSAEvw.3094966f5fcde47173d52773003596dff4ff9a391626e00ff8bdbc87067f6c15',
-                    'Content-Type': 'application/json'
-                }
-            });
-            const data = await response.json();
-            return data.records;
-        }
+          <div class="recent-counts">
+            <div>
+              <span class="text-header right"> TOTAL OUTCOMES </span>
 
-        // Function to process and aggregate data
-        function processResults(records) {
-            const results = {
-                image: { amateurs: 0, pros: 0, rookies: 0 },
-                audio: { amateurs: 0, pros: 0, rookies: 0 },
-                video: { amateurs: 0, pros: 0, rookies: 0 },
-            };
+              <span class="text-header top"> LAST 20 MINUTES </span>
+            </div>
+            <div class="count-box">
+              <b>Amateur</b>
+              <div id="amateur-count" class="plus-sign">0</div>
+            </div>
+            <div class="count-box">
+              <b>Trainee</b>
+              <div id="rookie-count" class="plus-sign">0</div>
+            </div>
+            <div class="count-box">
+              <b>Pro</b>
+              <div id="pro-count" class="plus-sign">0</div>
+            </div>
+          </div>
+        </div>
 
-            const now = new Date();
-            const pastTime = new Date(now.getTime() - 20 * 60000); // 20 minutes ago
+        <div class="key">
+          <div class="ellipse-parent">
+            <div class="frame-child"></div>
+            <b>Video Results</b>
+          </div>
+          <div class="ellipse-parent">
+            <div class="frame-item"></div>
+            <b>Audio Results</b>
+          </div>
+          <div class="ellipse-parent">
+            <div class="frame-inner"></div>
+            <b>Photo Results</b>
+          </div>
+        </div>
+      </div>
+    </div> -->
 
-            let recentCounts = { amateurs: 0, pros: 0, rookies: 0 };
+    <!-- <script>
+      let chart;
 
-            records.forEach(record => {
-                const quizType = record.fields.Quiz;
-                const resultName = record.fields.Result_name;
-                const createdTime = new Date(record.createdTime);
-
-                if (quizType && resultName) {
-                    if (resultName.includes('Amateur')) {
-                        results[quizType].amateurs++;
-                    } else if (resultName.includes('Pro')) {
-                        results[quizType].pros++;
-                    } else if (resultName.includes('Rookie')) {
-                        results[quizType].rookies++;
-                    }
-
-                    if (createdTime >= pastTime) {
-                        if (resultName.includes('Amateur')) {
-                            recentCounts.amateurs++;
-                        } else if (resultName.includes('Pro')) {
-                            recentCounts.pros++;
-                        } else if (resultName.includes('Rookie')) {
-                            recentCounts.rookies++;
-                        }
-                    }
-                }
-            });
-
-            document.getElementById('amateur-count').textContent = recentCounts.amateurs;
-            document.getElementById('rookie-count').textContent = recentCounts.rookies;
-            document.getElementById('pro-count').textContent = recentCounts.pros;
-
-            return results;
-        }
-
-        // Create chart data
-        function createChartData(results) {
-            return {
-                labels: ['Amateur', 'Trainee', 'Pro'],  
-                
-                datasets: [
-                  
-                    {
-                        label: 'Audio',
-                        data: [
-                            results.audio.amateurs, 
-                            results.audio.rookies, 
-                            results.audio.pros,
-                        ],
-                        backgroundColor: '#FFDC00', // Yellow
-                        borderColor: '#FFDC00',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Video',
-                        data: [
-                            results.video.amateurs,
-                            results.video.rookies,
-                            results.video.pros
-                        ],
-                        backgroundColor: '#FF8200', // orange
-                        borderColor: '#FF8200',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Photo',
-                        data: [
-                            results.image.amateurs,  
-                            results.image.rookies,  
-                            results.image.pros,
-                        ],
-                        backgroundColor: '#8A68C8', // Purple
-                        borderColor: '#8A68C8',
-                        borderWidth: 1
-                    }
-                   
-                    
-                ]
-            };
-        }
-
-        // Chart options for better UX
-        const options = {
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    display: false,
-                },
-                x: {
-                    ticks: {
-                        color: 'white', // set x-axis label color to white
-                        font: {
-                            size: 25,
-                            family: 'Roboto Mono',
-                            position: "left"
-                        }
-                        
-                    },
-                }
+      // Function to return dummy data with three bars for each category at different levels
+      async function fetchData() {
+        return [
+          // Dummy data for Audio
+          {
+            fields: {
+              Quiz: "audio",
+              Result_name: "Amateur",
+              createdTime: new Date().toISOString(),
             },
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
+          },
+          {
+            fields: {
+              Quiz: "audio",
+              Result_name: "Rookie",
+              createdTime: new Date().toISOString(),
+            },
+          },
+          {
+            fields: {
+              Quiz: "audio",
+              Result_name: "Pro",
+              createdTime: new Date().toISOString(),
+            },
+          },
+
+          // Dummy data for Video
+          {
+            fields: {
+              Quiz: "video",
+              Result_name: "Amateur",
+              createdTime: new Date().toISOString(),
+            },
+          },
+          {
+            fields: {
+              Quiz: "video",
+              Result_name: "Rookie",
+              createdTime: new Date().toISOString(),
+            },
+          },
+          {
+            fields: {
+              Quiz: "video",
+              Result_name: "Pro",
+              createdTime: new Date().toISOString(),
+            },
+          },
+
+          // Dummy data for Image (Photo)
+          {
+            fields: {
+              Quiz: "image",
+              Result_name: "Amateur",
+              createdTime: new Date().toISOString(),
+            },
+          },
+          {
+            fields: {
+              Quiz: "image",
+              Result_name: "Rookie",
+              createdTime: new Date().toISOString(),
+            },
+          },
+          {
+            fields: {
+              Quiz: "image",
+              Result_name: "Pro",
+              createdTime: new Date().toISOString(),
+            },
+          },
+        ];
+      }
+
+      // Function to process and aggregate data
+      function processResults(records) {
+        const results = {
+          image: { amateurs: 0, pros: 0, rookies: 0 },
+          audio: { amateurs: 0, pros: 0, rookies: 0 },
+          video: { amateurs: 0, pros: 0, rookies: 0 },
         };
 
-        // Function to render Chart
-        function renderChart(ctxId, chartData) {
-            const ctx = document.getElementById(ctxId).getContext('2d');
-            if (chart) {
-                chart.destroy(); // Destroy the existing chart if it exists
+        const now = new Date();
+        const pastTime = new Date(now.getTime() - 20 * 60000); // 20 minutes ago
+
+        let recentCounts = { amateurs: 0, pros: 0, rookies: 0 };
+
+        records.forEach((record) => {
+          const quizType = record.fields.Quiz;
+          const resultName = record.fields.Result_name;
+          const createdTime = new Date(record.createdTime);
+
+          if (quizType && resultName) {
+            if (resultName.includes("Amateur")) {
+              results[quizType].amateurs++;
+            } else if (resultName.includes("Pro")) {
+              results[quizType].pros++;
+            } else if (resultName.includes("Rookie")) {
+              results[quizType].rookies++;
             }
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: options
-            });
-        }
 
-        // Function to fetch data and update chart
-        async function updateChart() {
-            const records = await fetchData();
-            const results = processResults(records);
-            const chartData = createChartData(results);
-            renderChart('resultsChart', chartData);
-        }
+            if (createdTime >= pastTime) {
+              if (resultName.includes("Amateur")) {
+                recentCounts.amateurs++;
+              } else if (resultName.includes("Pro")) {
+                recentCounts.pros++;
+              } else if (resultName.includes("Rookie")) {
+                recentCounts.rookies++;
+              }
+            }
+          }
+        });
 
-        // Fetch and render the data when the window loads
-        window.onload = function() {
-            updateChart();
-            setInterval(updateChart, 60000); // Update chart every 60 seconds (60000 milliseconds)
+        document.getElementById("amateur-count").textContent =
+          recentCounts.amateurs;
+        document.getElementById("rookie-count").textContent =
+          recentCounts.rookies;
+        document.getElementById("pro-count").textContent = recentCounts.pros;
+
+        return results;
+      }
+
+      // Create chart data
+      function createChartData(results) {
+        return {
+          labels: ["Amateur", "Rookie", "Pro"],
+          datasets: [
+            {
+              label: "Audio",
+              data: [
+                results.audio.amateurs,
+                results.audio.rookies,
+                results.audio.pros,
+              ],
+              backgroundColor: "#FFDC00", // Yellow
+              borderColor: "#FFDC00",
+              borderWidth: 1,
+            },
+            {
+              label: "Video",
+              data: [
+                results.video.amateurs,
+                results.video.rookies,
+                results.video.pros,
+              ],
+              backgroundColor: "#FF8200", // Orange
+              borderColor: "#FF8200",
+              borderWidth: 1,
+            },
+            {
+              label: "Photo",
+              data: [
+                results.image.amateurs,
+                results.image.rookies,
+                results.image.pros,
+              ],
+              backgroundColor: "#8A68C8", // Purple
+              borderColor: "#8A68C8",
+              borderWidth: 1,
+            },
+          ],
         };
+      }
+
+      // Chart options for better UX
+      const options = {
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            display: true,
+          },
+          x: {
+            ticks: {
+              color: "white", // set x-axis label color to white
+              font: {
+                size: 18,
+                family: "Roboto Mono",
+              },
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: "white",
+            },
+          },
+        },
+      };
+
+      // Function to render Chart
+      function renderChart(ctxId, chartData) {
+        const ctx = document.getElementById(ctxId).getContext("2d");
+        if (chart) {
+          chart.destroy(); // Destroy the existing chart if it exists
+        }
+        chart = new Chart(ctx, {
+          type: "bar",
+          data: chartData,
+          options: options,
+        });
+      }
+
+      // Function to fetch data and update chart
+      async function updateChart() {
+        const records = await fetchData();
+        const results = processResults(records);
+        const chartData = createChartData(results);
+        renderChart("resultsChart", chartData);
+      }
+
+      // Fetch and render the data when the window loads
+      window.onload = function () {
+        updateChart();
+        setInterval(updateChart, 60000); // Update chart every 60 seconds (60000 milliseconds)
+      };
+    </script> -->
+    <!-- <script>
+      let chart;
+
+      // Function to fetch data from Airtable
+      async function fetchData() {
+        const response = await fetch(
+          "https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201",
+          {
+            headers: {
+              Authorization:
+                "Bearer patFK6oNVppWSAEvw.3094966f5fcde47173d52773003596dff4ff9a391626e00ff8bdbc87067f6c15",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        return data.records;
+      }
+
+      // Function to process and aggregate data
+      function processResults(records) {
+        const results = {
+          image: { amateurs: 0, pros: 0, rookies: 0 },
+          audio: { amateurs: 0, pros: 0, rookies: 0 },
+          video: { amateurs: 0, pros: 0, rookies: 0 },
+        };
+
+        const now = new Date();
+        const pastTime = new Date(now.getTime() - 20 * 60000); // 20 minutes ago
+
+        let recentCounts = { amateurs: 0, pros: 0, rookies: 0 };
+
+        records.forEach((record) => {
+          const quizType = record.fields.Quiz;
+          const resultName = record.fields.Result_name;
+          const createdTime = new Date(record.createdTime);
+
+          if (quizType && resultName) {
+            if (resultName.includes("Amateur")) {
+              results[quizType].amateurs++;
+            } else if (resultName.includes("Pro")) {
+              results[quizType].pros++;
+            } else if (resultName.includes("Rookie")) {
+              results[quizType].rookies++;
+            }
+
+            if (createdTime >= pastTime) {
+              if (resultName.includes("Amateur")) {
+                recentCounts.amateurs++;
+              } else if (resultName.includes("Pro")) {
+                recentCounts.pros++;
+              } else if (resultName.includes("Rookie")) {
+                recentCounts.rookies++;
+              }
+            }
+          }
+        });
+
+        document.getElementById("amateur-count").textContent =
+          recentCounts.amateurs;
+        document.getElementById("rookie-count").textContent =
+          recentCounts.rookies;
+        document.getElementById("pro-count").textContent = recentCounts.pros;
+
+        return results;
+      }
+
+      // Create chart data
+      function createChartData(results) {
+        return {
+          labels: ["Amateur", "Trainee", "Pro"],
+
+          datasets: [
+            {
+              label: "Audio",
+              data: [
+                results.audio.amateurs,
+                results.audio.rookies,
+                results.audio.pros,
+              ],
+              backgroundColor: "#FFDC00", // Yellow
+              borderColor: "#FFDC00",
+              borderWidth: 1,
+            },
+            {
+              label: "Video",
+              data: [
+                results.video.amateurs,
+                results.video.rookies,
+                results.video.pros,
+              ],
+              backgroundColor: "#FF8200", // orange
+              borderColor: "#FF8200",
+              borderWidth: 1,
+            },
+            {
+              label: "Photo",
+              data: [
+                results.image.amateurs,
+                results.image.rookies,
+                results.image.pros,
+              ],
+              backgroundColor: "#8A68C8", // Purple
+              borderColor: "#8A68C8",
+              borderWidth: 1,
+            },
+          ],
+        };
+      }
+
+      // Chart options for better UX
+      const options = {
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            display: false,
+          },
+          x: {
+            ticks: {
+              color: "white", // set x-axis label color to white
+              font: {
+                size: 25,
+                family: "Roboto Mono",
+                position: "left",
+              },
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      };
+
+      // Function to render Chart
+      function renderChart(ctxId, chartData) {
+        const ctx = document.getElementById(ctxId).getContext("2d");
+        if (chart) {
+          chart.destroy(); // Destroy the existing chart if it exists
+        }
+        chart = new Chart(ctx, {
+          type: "bar",
+          data: chartData,
+          options: options,
+        });
+      }
+
+      // Function to fetch data and update chart
+      async function updateChart() {
+        const records = await fetchData();
+        const results = processResults(records);
+        const chartData = createChartData(results);
+        renderChart("resultsChart", chartData);
+      }
+
+      // Fetch and render the data when the window loads
+      window.onload = function () {
+        updateChart();
+        setInterval(updateChart, 60000); // Update chart every 60 seconds (60000 milliseconds)
+      };
+    </script> -->
+    <script>
+      const ctx = document.getElementById("myChart").getContext("2d");
+
+      const customLabelStyles = {
+        'Amateur': { color: '#FFDC00', fontSize: '16px', fontStyle: 'bold' },
+        'Trainee': { color: '#FF8200', fontSize: '16px', fontStyle: 'italic' },
+        'Pro': { color: '#8A68C8', fontSize: '16px', fontStyle: 'underline' }
+    };
+    
+      const myChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Amateur", "Trainee", "Pro"],
+          datasets: [
+            {
+              label: "Dataset 1",
+              data: [40, 30, 30],
+              backgroundColor: "#FF8200",
+              borderColor: "#FF8200",
+              borderWidth: 1,
+            },
+            {
+              label: "Dataset 2",
+              data: [50, 25, 35],
+              backgroundColor: "#FFDC00",
+              borderColor: "#FFDC00",
+              borderWidth: 1,
+            },
+            {
+              label: "Dataset 3",
+              data: [20, 30, 40],
+              backgroundColor: "#8A68C8",
+              borderColor: "#8A68C8",
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                display: false, // Hide the values on the left side (y-axis labels)
+                stepSize: 15, // Increase the space between dashed lines by changing the step size
+              },
+              grid: {
+                borderDash: [10, 15], // Increase the length of the dashes and the gap between them
+                color: "#888888", // Color of the dashed lines
+              },
+            },
+            x: {
+                ticks: {
+                    color: "white", // Set x-axis label color to white
+                    font: {
+                        size: window.innerWidth < 768 ? 12 : 25, // Smaller font size for mobile screens
+                        family: "Roboto Mono",
+                    },
+                },
+            },
+          },
+          plugins: {
+            legend: {
+              display: false, // Hide the legend (dataset labels)
+            },
+          },
+          responsive: true,
+          barPercentage: 0.6, // Adjusts the bar width
+          categoryPercentage: 0.7, // Adjusts the width of bars within the category
+        },
+      });
     </script>
-</body>
+  </body>
 </html>
