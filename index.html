@@ -48,7 +48,7 @@
       </div>
       <div class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-start">
 
-          <div class="flex flex-col w-full gap-[30px]"> 
+          <div class="flex flex-col w-full gap-[20px] sm:gap-[30px] xl:gap-[1.2vw]"> 
             <div>
                 <span class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white">
                     TOTAL OUTCOMES
@@ -60,22 +60,22 @@
                     <canvas id="resultsChart"></canvas>
                 </div>
              </div>
-            <div class="flex justify-between uppercase sm:justify-start sm:gap-[30px]">
-              <div class="flex gap-[6px] items-center">
-                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#ff8200]"></div>
-                <span class="text-[10px] sm:text-[16px]">Video Results</span>
+            <div class="flex justify-between uppercase sm:justify-start sm:gap-[30px] xl:gap-[1.1vw]">
+              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ff8200]"></div>
+                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Video Results</span>
               </div>
-              <div class="flex gap-[6px] items-center">
-                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#ffdc00]"></div>
-                <span class="text-[10px] sm:text-[16px]">Audio Results</span>
+              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ffdc00]"></div>
+                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Audio Results</span>
               </div>
-              <div class="flex gap-[6px] items-center">
-                <div class="rounded-full p-[6px] sm:p-[10px] bg-[#8a68c8]"></div>
-                <span class="text-[10px] sm:text-[16px]">Photo Results</span>
+              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#8a68c8]"></div>
+                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Photo Results</span>
               </div>
             </div>
           </div>
-            <div class="flex flex-col gap-[30px] xl:gap-[1.1vw]">
+            <div class="flex flex-col gap-[20px] sm:gap-[30px] xl:gap-[1.1vw]">
                 <div>
                     <span class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white">
                         LAST 20 MINUTES
@@ -353,6 +353,27 @@
         };
       }
 
+      function calculateFontSize() {
+        const screenWidth = window.innerWidth;
+    
+        // Tailwind breakpoints:
+        // sm: 640px
+        // md: 768px
+        // lg: 1024px
+        // xl: 1280px
+    
+        if (screenWidth >= 1280) {
+            // xl and above
+            return screenWidth * 0.011; 
+        } else if (screenWidth >= 640) {
+            // sm to xl
+            return 25; 
+        } else {
+            // less than sm
+            return 12; 
+        }
+    }
+
       const options = {
         scales: {
           y: {
@@ -370,7 +391,7 @@
               ticks: {
                   color: "white", 
                   font: {
-                      size: window.innerWidth < 768 ? 12 : 25,
+                      size: calculateFontSize(),
                       family: "Roboto Mono",
                   },
               },
