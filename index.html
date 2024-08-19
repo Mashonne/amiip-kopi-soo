@@ -46,62 +46,101 @@
           </div>
         </div>
       </div>
-      <div class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-start">
-
-          <div class="flex flex-col w-full gap-[20px] sm:gap-[30px] xl:gap-[1.2vw]"> 
-            <div>
-                <span class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white">
-                    TOTAL OUTCOMES
-                </span>
-            </div>         
-             <div class="flex flex-col xl:flex-row justify-between">
-                <div class="w-full xl:w-7/12">
-                    <!-- <canvas id="resultsChart" height="110""></canvas> -->
-                    <canvas id="resultsChart"></canvas>
-                </div>
-             </div>
-            <div class="flex justify-between uppercase sm:justify-start sm:gap-[30px] xl:gap-[1.1vw]">
-              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
-                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ff8200]"></div>
-                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Video Results</span>
-              </div>
-              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
-                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ffdc00]"></div>
-                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Audio Results</span>
-              </div>
-              <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
-                <div class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#8a68c8]"></div>
-                <span class="text-[10px] sm:text-[16px] xl:text-[1vw]">Photo Results</span>
-              </div>
+      <div
+        class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-start"
+      >
+        <div
+          class="flex flex-col w-full gap-[20px] sm:gap-[30px] xl:gap-[1.2vw]"
+        >
+          <div>
+            <span
+              class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white"
+            >
+              TOTAL OUTCOMES
+            </span>
+          </div>
+          <div class="flex flex-col xl:flex-row justify-between">
+            <div class="w-full xl:w-7/12">
+              <!-- <canvas id="resultsChart" height="110""></canvas> -->
+              <canvas id="resultsChart"></canvas>
             </div>
           </div>
-            <div class="flex flex-col gap-[20px] sm:gap-[30px] xl:gap-[1.1vw]">
-                <div>
-                    <span class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white">
-                        LAST 20 MINUTES
-                    </span>
-                </div>
-                <div class="flex flex-row xl:flex-col gap-[10px] xl:gap-[1vw]">
-                    <div class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]">
-                        <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase">AMATEUR</span>
-                        <span class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center">
-                            +1
-                        </span>
-                    </div>
-                    <div class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]">
-                        <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase">Trainee</span>
-                        <span class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center">
-                            +2
-                        </span>
-                    </div>
-                    <div class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px]  xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]">
-                        <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase">Pro</span>
-                        <span class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center">
-                            +0
-                        </span>
-                    </div>
-                </div>
+          <div
+            class="flex justify-between uppercase sm:justify-start sm:gap-[30px] xl:gap-[1.1vw]"
+          >
+            <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+              <div
+                class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ff8200]"
+              ></div>
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw]"
+                >Video Results</span
+              >
             </div>
+            <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+              <div
+                class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ffdc00]"
+              ></div>
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw]"
+                >Audio Results</span
+              >
+            </div>
+            <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
+              <div
+                class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#8a68c8]"
+              ></div>
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw]"
+                >Photo Results</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-[20px] sm:gap-[30px] xl:gap-[1.1vw]">
+          <div>
+            <span
+              class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white"
+            >
+              LAST 20 MINUTES
+            </span>
+          </div>
+          <div class="flex flex-row xl:flex-col gap-[10px] xl:gap-[1vw]">
+            <div
+              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+            >
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+                >AMATEUR</span
+              >
+              <span
+                class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              >
+                +1
+              </span>
+            </div>
+            <div
+              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+            >
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+                >Trainee</span
+              >
+              <span
+                class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              >
+                +2
+              </span>
+            </div>
+            <div
+              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+            >
+              <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+                >Pro</span
+              >
+              <span
+                class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              >
+                +0
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- <script>
@@ -269,7 +308,7 @@
     </script> -->
     <script>
       let chart;
-    
+
       async function fetchData() {
         const response = await fetch(
           "https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201",
@@ -284,7 +323,7 @@
         const data = await response.json();
         return data.records;
       }
-    
+
       // Function to process and aggregate data
       function processResults(records) {
         const results = {
@@ -292,11 +331,11 @@
           audio: { amateurs: 0, pros: 0, rookies: 0 },
           video: { amateurs: 0, pros: 0, rookies: 0 },
         };
-    
+
         records.forEach((record) => {
           const quizType = record.fields.Quiz.toLowerCase();
           const resultName = record.fields.Result_name;
-    
+
           if (quizType && resultName) {
             if (resultName.includes("Amateur")) {
               results[quizType].amateurs++;
@@ -307,11 +346,10 @@
             }
           }
         });
-    
+
         return results;
       }
-    
-      // Create chart data
+
       function createChartData(results) {
         return {
           labels: ["Amateur", "Trainee", "Pro"],
@@ -323,7 +361,7 @@
                 results.audio.rookies,
                 results.audio.pros,
               ],
-              backgroundColor: "#FFDC00", 
+              backgroundColor: "#FFDC00",
               borderColor: "#FFDC00",
               borderWidth: 1,
             },
@@ -355,62 +393,62 @@
 
       function calculateFontSize() {
         const screenWidth = window.innerWidth;
-    
+
         // Tailwind breakpoints:
         // sm: 640px
         // md: 768px
         // lg: 1024px
         // xl: 1280px
-    
+
         if (screenWidth >= 1280) {
-            // xl and above
-            return screenWidth * 0.011; 
+          // xl and above
+          return screenWidth * 0.011;
         } else if (screenWidth >= 640) {
-            // sm to xl
-            return 25; 
+          // sm to xl
+          return 25;
         } else {
-            // less than sm
-            return 12; 
+          // less than sm
+          return 12;
         }
-    }
+      }
 
       const options = {
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
-              display: false, 
-              stepSize: 15, 
+              display: false,
+              stepSize: 15,
             },
             grid: {
-              borderDash: [10, 15], 
+              borderDash: [10, 15],
               color: "#888888",
             },
           },
           x: {
-              ticks: {
-                  color: "white", 
-                  font: {
-                      size: calculateFontSize(),
-                      family: "Roboto Mono",
-                  },
+            ticks: {
+              color: "white",
+              font: {
+                size: calculateFontSize(),
+                family: "Roboto Mono",
               },
+            },
           },
         },
         plugins: {
           legend: {
-            display: false, 
+            display: false,
           },
         },
         responsive: true,
-        barPercentage: 0.8, 
-        categoryPercentage: 0.7, 
-      }
-    
+        barPercentage: 0.8,
+        categoryPercentage: 0.7,
+      };
+
       function renderChart(chartData) {
         const ctx = document.getElementById("resultsChart").getContext("2d");
         if (chart) {
-          chart.destroy(); 
+          chart.destroy();
         }
         chart = new Chart(ctx, {
           type: "bar",
@@ -418,17 +456,17 @@
           options: options,
         });
       }
-    
+
       async function updateChart() {
         const records = await fetchData();
         const results = processResults(records);
         const chartData = createChartData(results);
         renderChart(chartData);
       }
-    
+
       window.onload = function () {
         updateChart();
-        setInterval(updateChart, 60000); 
+        setInterval(updateChart, 60000);
       };
     </script>
   </body>
