@@ -6,6 +6,7 @@
     <title>Aggregate Results</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" /> -->
@@ -24,7 +25,7 @@
   </head>
   <body>
     <div
-      class="flex flex-col sm:h-screen justify-between gap-[30px] sm:py-[50px] xl:py-[60px] py-[30px] px-[30px] sm:px-[60px] xl:px-[70px]"
+      class="flex flex-col sm:h-screen gap-[30px] sm:py-[50px] xl:py-[60px] py-[30px] px-[30px] sm:px-[60px] xl:px-[70px]"
     >
       <div
         class="flex justify-start gap-[20px] xl:justify-between flex-col xl:flex-row"
@@ -52,22 +53,20 @@
         <div
           class="flex flex-col w-full gap-[20px] sm:gap-[30px] xl:gap-[1.2vw]"
         >
-          <div>
+          <div class="flex justify-start">
             <span
               class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white"
             >
               TOTAL OUTCOMES
             </span>
           </div>
-          <div class="flex flex-col xl:flex-row justify-between">
-            <div class="w-full xl:w-7/12">
+          <div class="flex justify-start">
+            <div class="w-full xl:w-8/12">
               <!-- <canvas id="resultsChart" height="110""></canvas> -->
               <canvas id="resultsChart"></canvas>
             </div>
           </div>
-          <div
-            class="flex justify-between uppercase sm:justify-start sm:gap-[30px] xl:gap-[1.1vw]"
-          >
+          <div class="flex justify-start sm:gap-[30px] xl:gap-[1.1vw]">
             <div class="flex gap-[6px] items-center xl:gap-[0.6vw]">
               <div
                 class="rounded-full p-[6px] sm:p-[10px] xl:p-[0.65vw] bg-[#ff8200]"
@@ -111,8 +110,9 @@
               >
               <span
                 class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+                id="amateur"
               >
-                +1
+                -
               </span>
             </div>
             <div
@@ -123,8 +123,9 @@
               >
               <span
                 class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+                id="trainee"
               >
-                +2
+                -
               </span>
             </div>
             <div
@@ -135,8 +136,9 @@
               >
               <span
                 class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+                id="pro"
               >
-                +0
+                -
               </span>
             </div>
           </div>
@@ -350,6 +352,7 @@
         return results;
       }
 
+      // Create chart data
       function createChartData(results) {
         return {
           labels: ["Amateur", "Trainee", "Pro"],
@@ -415,17 +418,24 @@
       const options = {
         scales: {
           y: {
-            beginAtZero: true,
+            // beginAtZero: true,
             ticks: {
-              display: false,
-              stepSize: 15,
+              // display: false,
+              stepSize: 4,
             },
             grid: {
-              borderDash: [10, 15],
               color: "#888888",
             },
+            border: {
+              dash: [6, 6],
+              color: "white",
+            },
           },
+
           x: {
+            border: {
+              color: "white",
+            },
             ticks: {
               color: "white",
               font: {
@@ -445,6 +455,29 @@
         categoryPercentage: 0.7,
       };
 
+      function getTimeRangeData(apiData) {
+        const currentDateTime = moment();
+        const dateTime30MinutesAgo = moment().subtract(20, "minutes");
+
+        const last20MinData = apiData.filter((d) =>
+          moment(d.createdTime).isBetween(dateTime30MinutesAgo, currentDateTime)
+        );
+
+        return last20MinData.reduce(
+          (acc, data) =>
+            acc[data.fields.Result_name]
+              ? {
+                  ...acc,
+                  [data.fields.Result_name]: acc[data.fields.Result_name] + 1,
+                }
+              : {
+                  ...acc,
+                  [data.fields.Result_name]: 1,
+                },
+          {}
+        );
+      }
+
       function renderChart(chartData) {
         const ctx = document.getElementById("resultsChart").getContext("2d");
         if (chart) {
@@ -457,16 +490,30 @@
         });
       }
 
+      function renderElements(apiData) {
+        const result = getTimeRangeData(apiData);
+        const { Amateur, Rookie, Pro } = result;
+
+        const amateurElement = document.getElementById("amateur");
+        const traineeElement = document.getElementById("trainee");
+        const proElement = document.getElementById("pro");
+
+        amateurElement.innerHTML = "+" + (Amateur || 0);
+        traineeElement.innerHTML = "+" + (Rookie || 0);
+        proElement.innerHTML = "+" + (Pro || 0);
+      }
+
       async function updateChart() {
         const records = await fetchData();
         const results = processResults(records);
         const chartData = createChartData(results);
         renderChart(chartData);
+        renderElements(records);
       }
 
       window.onload = function () {
         updateChart();
-        setInterval(updateChart, 60000);
+        setInterval(updateChart, 15000);
       };
     </script>
   </body>
