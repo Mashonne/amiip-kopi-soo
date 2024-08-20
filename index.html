@@ -25,7 +25,7 @@
   </head>
   <body>
     <div
-      class="flex flex-col sm:h-screen gap-[30px] sm:py-[50px] xl:py-[60px] py-[30px] px-[30px] sm:px-[60px] xl:px-[70px]"
+      class="flex flex-col gap-[30px] sm:py-[50px] xl:py-[60px] py-[30px] px-[30px] sm:px-[60px] xl:px-[70px]"
     >
       <div
         class="flex justify-start gap-[20px] xl:justify-between flex-col xl:flex-row"
@@ -48,7 +48,7 @@
         </div>
       </div>
       <div
-        class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-start"
+        class="flex w-full flex-col xl:flex-row justify-between gap-[20px] xl:items-start relative"
       >
         <div
           class="flex flex-col w-full gap-[20px] sm:gap-[30px] xl:gap-[1.2vw]"
@@ -60,10 +60,13 @@
               TOTAL OUTCOMES
             </span>
           </div>
-          <div class="flex justify-start">
-            <div class="w-full xl:w-8/12">
+          <div class="flex justify-start mt-[20px]">
+            <div class="w-full">
               <!-- <canvas id="resultsChart" height="110""></canvas> -->
-              <canvas id="resultsChart"></canvas>
+              <canvas
+                id="resultsChart"
+                style="width: 100vw; height: 50vh"
+              ></canvas>
             </div>
           </div>
           <div class="flex justify-start sm:gap-[30px] xl:gap-[1.1vw]">
@@ -93,7 +96,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col gap-[20px] sm:gap-[30px] xl:gap-[1.1vw]">
+        <div class="flex flex-col absolute right-[100px] xl:block hidden">
           <div>
             <span
               class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white"
@@ -101,9 +104,11 @@
               LAST 20 MINUTES
             </span>
           </div>
-          <div class="flex flex-row xl:flex-col gap-[10px] xl:gap-[1vw]">
+          <div
+            class="flex flex-row xl:flex-col gap-[10px] xl:gap-[1vw] mt-[20px]"
+          >
             <div
-              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+              class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
             >
               <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
                 >AMATEUR</span
@@ -116,7 +121,7 @@
               </span>
             </div>
             <div
-              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+              class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
             >
               <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
                 >Trainee</span
@@ -129,7 +134,7 @@
               </span>
             </div>
             <div
-              class="flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+              class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
             >
               <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
                 >Pro</span
@@ -141,6 +146,58 @@
                 -
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="flex flex-col gap-[20px] sm:gap-[30px] xl:gap-[1.1vw] xl:hidden block"
+      >
+        <div>
+          <span
+            class="text-[10px] font-semibold sm:text-[16px] xl:text-[1vw] px-[7px] text-black bg-white"
+          >
+            LAST 20 MINUTES
+          </span>
+        </div>
+        <div class="flex flex-row xl:flex-col gap-[10px] xl:gap-[1vw]">
+          <div
+            class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+          >
+            <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+              >AMATEUR</span
+            >
+            <span
+              class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              id="amateur-sm"
+            >
+              -
+            </span>
+          </div>
+          <div
+            class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+          >
+            <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+              >Trainee</span
+            >
+            <span
+              class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              id="trainee-sm"
+            >
+              -
+            </span>
+          </div>
+          <div
+            class="bg-[black] flex px-[10px] xl:px-[1vw] sm:px-[20px] flex-col w-full py-[5px] xl:w-[12vw] border-white border-[2px] xl:border-[0.15vw] rounded-[10px] xl:rounded-[1vw]"
+          >
+            <span class="text-[10px] sm:text-[16px] xl:text-[1vw] uppercase"
+              >Pro</span
+            >
+            <span
+              class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
+              id="pro-sm"
+            >
+              -
+            </span>
           </div>
         </div>
       </div>
@@ -310,6 +367,7 @@
     </script> -->
     <script>
       let chart;
+      let oldChartData;
 
       async function fetchData() {
         const response = await fetch(
@@ -355,7 +413,7 @@
       // Create chart data
       function createChartData(results) {
         return {
-          labels: ["Amateur", "Trainee", "Pro"],
+          labels: ["Amateur", "Trainee", "Pro", ""],
           datasets: [
             {
               label: "Audio",
@@ -449,6 +507,7 @@
           },
         },
         responsive: true,
+        maintainAspectRatio: false,
         barPercentage: 0.8,
         categoryPercentage: 0.7,
       };
@@ -481,6 +540,7 @@
         if (chart) {
           chart.destroy();
         }
+
         chart = new Chart(ctx, {
           type: "bar",
           data: chartData,
@@ -495,18 +555,30 @@
         const amateurElement = document.getElementById("amateur");
         const traineeElement = document.getElementById("trainee");
         const proElement = document.getElementById("pro");
+        const amateurSmallElement = document.getElementById("amateur-sm");
+        const traineeSmallElement = document.getElementById("trainee-sm");
+        const proSmallElement = document.getElementById("pro-sm");
 
         amateurElement.innerHTML = "+" + (Amateur || 0);
         traineeElement.innerHTML = "+" + (Rookie || 0);
         proElement.innerHTML = "+" + (Pro || 0);
+
+        amateurSmallElement.innerHTML = "+" + (Amateur || 0);
+        traineeSmallElement.innerHTML = "+" + (Rookie || 0);
+        proSmallElement.innerHTML = "+" + (Pro || 0);
       }
 
       async function updateChart() {
         const records = await fetchData();
-        const results = processResults(records);
-        const chartData = createChartData(results);
-        renderChart(chartData);
-        renderElements(records);
+        if (oldChartData === JSON.stringify(records)) {
+          return;
+        } else {
+          oldChartData = JSON.stringify(records);
+          const results = processResults(records);
+          const chartData = createChartData(results);
+          renderChart(chartData);
+          renderElements(records);
+        }
       }
 
       window.onload = function () {
