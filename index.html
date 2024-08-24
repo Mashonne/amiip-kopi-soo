@@ -124,7 +124,7 @@
               >
               <span
                 class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
-                id="trainee"
+                id="rookie"
               >
                 -
               </span>
@@ -177,7 +177,7 @@
             >
             <span
               class="text-[25px] sm:text-[40px] xl:text-[3.5vw] font-medium text-center"
-              id="trainee-sm"
+              id="rookie-sm"
             >
               -
             </span>
@@ -409,7 +409,7 @@
       // Create chart data
       function createChartData(results) {
         return {
-          labels: ["Amateur", "Trainee", "Pro", ""],
+          labels: ["Amateur", "Rookie", "Pro", ""],
           datasets: [
             {
               label: "Audio",
@@ -549,18 +549,18 @@
         const { Amateur, Rookie, Pro } = result;
 
         const amateurElement = document.getElementById("amateur");
-        const traineeElement = document.getElementById("trainee");
+        const rookieElement = document.getElementById("rookie");
         const proElement = document.getElementById("pro");
         const amateurSmallElement = document.getElementById("amateur-sm");
-        const traineeSmallElement = document.getElementById("trainee-sm");
+        const rookieSmallElement = document.getElementById("rookie-sm");
         const proSmallElement = document.getElementById("pro-sm");
 
         amateurElement.innerHTML = "+" + (Amateur || 0);
-        traineeElement.innerHTML = "+" + (Rookie || 0);
+        rookieElement.innerHTML = "+" + (Rookie || 0);
         proElement.innerHTML = "+" + (Pro || 0);
 
         amateurSmallElement.innerHTML = "+" + (Amateur || 0);
-        traineeSmallElement.innerHTML = "+" + (Rookie || 0);
+        rookieSmallElement.innerHTML = "+" + (Rookie || 0);
         proSmallElement.innerHTML = "+" + (Pro || 0);
       }
 
