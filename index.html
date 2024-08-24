@@ -364,22 +364,46 @@
     <script>
       let chart;
       let oldChartData;
-
+      let lastFetchTimestamp = null;
+      let cumulativeRecords = []; // This will store all fetched records
+    
       async function fetchData() {
-        const response = await fetch(
-          "https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201",
-          {
+        let newRecords = [];
+        let url = "https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201";
+        
+        if (lastFetchTimestamp) {
+          url += `?filterByFormula=CREATED_TIME() > '${lastFetchTimestamp.toISOString()}'`;
+        }
+    
+        let hasMore = true;
+    
+        while (hasMore) {
+          const response = await fetch(url, {
             headers: {
-              Authorization:
-                "Bearer patFK6oNVppWSAEvw.3094966f5fcde47173d52773003596dff4ff9a391626e00ff8bdbc87067f6c15",
+              Authorization: "Bearer patFK6oNVppWSAEvw.3094966f5fcde47173d52773003596dff4ff9a391626e00ff8bdbc87067f6c15",
               "Content-Type": "application/json",
             },
+          });
+          const data = await response.json();
+    
+          newRecords = newRecords.concat(data.records);
+    
+          if (data.records.length > 0) {
+            const latestRecord = data.records[data.records.length - 1];
+            lastFetchTimestamp = new Date(latestRecord.createdTime);
           }
-        );
-        const data = await response.json();
-        return data.records;
+    
+          // Check if there's more data to fetch
+          if (data.offset) {
+            url = `https://api.airtable.com/v0/appoOC9OGPSRRgACV/Table%201?offset=${data.offset}`;
+          } else {
+            hasMore = false;
+          }
+        }
+    
+        return newRecords;
       }
-
+    
       // Function to process and aggregate data
       function processResults(records) {
         const results = {
@@ -387,11 +411,11 @@
           audio: { amateurs: 0, pros: 0, rookies: 0 },
           video: { amateurs: 0, pros: 0, rookies: 0 },
         };
-
+    
         records.forEach((record) => {
           const quizType = record.fields.Quiz.toLowerCase();
           const resultName = record.fields.Result_name;
-
+    
           if (quizType && resultName) {
             if (resultName.includes("Amateur")) {
               results[quizType].amateurs++;
@@ -402,10 +426,10 @@
             }
           }
         });
-
+    
         return results;
       }
-
+    
       // Create chart data
       function createChartData(results) {
         return {
@@ -447,34 +471,26 @@
           ],
         };
       }
-
+    
       function calculateFontSize() {
         const screenWidth = window.innerWidth;
-
-        // Tailwind breakpoints:
-        // sm: 640px
-        // md: 768px
-        // lg: 1024px
-        // xl: 1280px
-
+    
         if (screenWidth >= 1280) {
-          // xl and above
           return screenWidth * 0.011;
         } else if (screenWidth >= 640) {
-          // sm to xl
           return 25;
         } else {
-          // less than sm
           return 12;
         }
       }
-
+    
       const options = {
         scales: {
           y: {
             ticks: {
               display: false,
               stepSize: 4,
+              maxTicksLimit: 10,
             },
             grid: {
               color: "#B3B3B3",
@@ -483,7 +499,6 @@
               dash: [6, 6],
             },
           },
-
           x: {
             border: {
               color: "#B3B3B3",
@@ -507,15 +522,15 @@
         barPercentage: 0.8,
         categoryPercentage: 0.7,
       };
-
+    
       function getTimeRangeData(apiData) {
         const currentDateTime = moment();
-        const dateTime30MinutesAgo = moment().subtract(20, "minutes");
-
+        const dateTime20MinutesAgo = moment().subtract(20, "minutes");
+    
         const last20MinData = apiData.filter((d) =>
-          moment(d.createdTime).isBetween(dateTime30MinutesAgo, currentDateTime)
+          moment(d.createdTime).isBetween(dateTime20MinutesAgo, currentDateTime)
         );
-
+    
         return last20MinData.reduce(
           (acc, data) =>
             acc[data.fields.Result_name]
@@ -530,57 +545,67 @@
           {}
         );
       }
-
+    
       function renderChart(chartData) {
         const ctx = document.getElementById("resultsChart").getContext("2d");
         if (chart) {
           chart.destroy();
         }
-
+    
         chart = new Chart(ctx, {
           type: "bar",
           data: chartData,
           options: options,
         });
       }
-
+    
       function renderElements(apiData) {
         const result = getTimeRangeData(apiData);
         const { Amateur, Rookie, Pro } = result;
-
+    
         const amateurElement = document.getElementById("amateur");
         const rookieElement = document.getElementById("rookie");
         const proElement = document.getElementById("pro");
         const amateurSmallElement = document.getElementById("amateur-sm");
         const rookieSmallElement = document.getElementById("rookie-sm");
         const proSmallElement = document.getElementById("pro-sm");
-
+    
         amateurElement.innerHTML = "+" + (Amateur || 0);
         rookieElement.innerHTML = "+" + (Rookie || 0);
         proElement.innerHTML = "+" + (Pro || 0);
-
+    
         amateurSmallElement.innerHTML = "+" + (Amateur || 0);
         rookieSmallElement.innerHTML = "+" + (Rookie || 0);
         proSmallElement.innerHTML = "+" + (Pro || 0);
       }
-
+    
       async function updateChart() {
-        const records = await fetchData();
-        if (oldChartData === JSON.stringify(records)) {
+        const newRecords = await fetchData();
+    
+        // Remove duplicates before updating cumulativeRecords
+        newRecords.forEach(record => {
+          if (!cumulativeRecords.find(existingRecord => existingRecord.id === record.id)) {
+            cumulativeRecords.push(record);
+          }
+        });
+    
+        if (oldChartData === JSON.stringify(cumulativeRecords)) {
           return;
         } else {
-          oldChartData = JSON.stringify(records);
-          const results = processResults(records);
+          oldChartData = JSON.stringify(cumulativeRecords);
+          const results = processResults(cumulativeRecords);
           const chartData = createChartData(results);
           renderChart(chartData);
-          renderElements(records);
+          renderElements(cumulativeRecords);
         }
       }
-
+    
       window.onload = function () {
         updateChart();
         setInterval(updateChart, 15000);
       };
     </script>
+    
+    
   </body>
 </html>
